@@ -9,6 +9,12 @@ use crate::{
     circuit::{OutputVerifyingKey, SpendVerifyingKey},
 };
 
+/// A wrapper around a [`groth16::batch::Verifier`] for Spend proofs.
+pub struct SpendProofType(groth16::batch::Verifier<Bls12>);
+
+/// A wrapper around a [`groth16::batch::Verifier`] for Output proofs.
+pub struct OutputProofType(groth16::batch::Verifier<Bls12>);
+
 /// Batch validation context for Sapling.
 ///
 /// This batch-validates Spend and Output proofs, and RedJubjub signatures.
@@ -16,8 +22,8 @@ use crate::{
 /// Signatures are verified assuming ZIP 216 is active.
 pub struct BatchValidator {
     bundles_added: bool,
-    spend_proofs: groth16::batch::Verifier<Bls12>,
-    output_proofs: groth16::batch::Verifier<Bls12>,
+    spend_proofs: SpendProofType,
+    output_proofs: OutputProofType,
     signatures: redjubjub::batch::Verifier,
 }
 
@@ -32,8 +38,8 @@ impl BatchValidator {
     pub fn new() -> Self {
         BatchValidator {
             bundles_added: false,
-            spend_proofs: groth16::batch::Verifier::new(),
-            output_proofs: groth16::batch::Verifier::new(),
+            spend_proofs: SpendProofType(groth16::batch::Verifier::new()),
+            output_proofs: OutputProofType(groth16::batch::Verifier::new()),
             signatures: redjubjub::batch::Verifier::new(),
         }
     }
@@ -76,7 +82,7 @@ impl BatchValidator {
                     true
                 },
                 |this, proof, public_inputs| {
-                    this.spend_proofs.queue((proof, public_inputs.to_vec()));
+                    this.spend_proofs.0.queue((proof, public_inputs.to_vec()));
                     true
                 },
             );
@@ -105,7 +111,7 @@ impl BatchValidator {
                 epk,
                 zkproof,
                 |proof, public_inputs| {
-                    self.output_proofs.queue((proof, public_inputs.to_vec()));
+                    self.output_proofs.0.queue((proof, public_inputs.to_vec()));
                     true
                 },
             );
@@ -151,12 +157,12 @@ impl BatchValidator {
         let mut verify_proofs =
             |batch: groth16::batch::Verifier<Bls12>, vk| batch.verify(&mut rng, vk);
 
-        if verify_proofs(self.spend_proofs, &spend_vk.0).is_err() {
+        if verify_proofs(self.spend_proofs.0, &spend_vk.0).is_err() {
             tracing::debug!("Spend proof batch validation failed");
             return false;
         }
 
-        if verify_proofs(self.output_proofs, &output_vk.0).is_err() {
+        if verify_proofs(self.output_proofs.0, &output_vk.0).is_err() {
             tracing::debug!("Output proof batch validation failed");
             return false;
         }
