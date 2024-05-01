@@ -588,6 +588,11 @@ impl SpendVerifyingKey {
     pub fn prepare(&self) -> PreparedSpendVerifyingKey {
         PreparedSpendVerifyingKey(groth16::prepare_verifying_key(&self.0))
     }
+
+    /// Get the verifying key as a groth16 type
+    pub fn inner(&self) -> &groth16::VerifyingKey<Bls12> {
+        &self.0
+    }
 }
 
 /// The verifying key for the Sapling Spend circuit, with precomputations optimized for
@@ -625,6 +630,11 @@ impl OutputVerifyingKey {
     /// Performs precomputations optimized for verifying individual proofs.
     pub fn prepare(&self) -> PreparedOutputVerifyingKey {
         PreparedOutputVerifyingKey(groth16::prepare_verifying_key(&self.0))
+    }
+
+    /// Get the verifying key as a groth16 type
+    pub fn inner(&self) -> &groth16::VerifyingKey<Bls12> {
+        &self.0
     }
 }
 
