@@ -12,7 +12,7 @@ mod single;
 pub use single::SaplingVerificationContext;
 
 mod batch;
-pub use batch::BatchValidator;
+pub use batch::{BatchValidator, SpendProofType, OutputProofType};
 
 /// A context object for verifying the Sapling components of a Zcash transaction.
 struct SaplingVerificationContextInner {

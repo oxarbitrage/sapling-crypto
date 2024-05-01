@@ -42,7 +42,7 @@ pub use tree::{
     merkle_hash, Anchor, CommitmentTree, IncrementalWitness, MerklePath, Node,
     NOTE_COMMITMENT_TREE_DEPTH,
 };
-pub use verifier::{BatchValidator, SaplingVerificationContext};
+pub use verifier::{BatchValidator, SaplingVerificationContext, SpendProofType, OutputProofType};
 
 #[cfg(any(test, feature = "test-dependencies"))]
 #[cfg_attr(docsrs, doc(cfg(feature = "test-dependencies")))]
