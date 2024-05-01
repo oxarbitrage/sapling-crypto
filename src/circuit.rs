@@ -599,6 +599,13 @@ impl SpendVerifyingKey {
 /// verifying individual proofs.
 pub struct PreparedSpendVerifyingKey(pub(crate) groth16::PreparedVerifyingKey<Bls12>);
 
+impl PreparedSpendVerifyingKey {
+    /// Get the prepared verifying key as a groth16 type
+    pub fn inner(&self) -> &groth16::PreparedVerifyingKey<Bls12> {
+        &self.0
+    }
+}
+
 /// The parameters for the Sapling Output circuit.
 pub struct OutputParameters(pub(crate) groth16::Parameters<Bls12>);
 
@@ -641,6 +648,13 @@ impl OutputVerifyingKey {
 /// The verifying key for the Sapling Output circuit, with precomputations optimized for
 /// verifying individual proofs.
 pub struct PreparedOutputVerifyingKey(pub(crate) groth16::PreparedVerifyingKey<Bls12>);
+
+impl PreparedOutputVerifyingKey {
+    /// Get the prepared verifying key as a groth16 type
+    pub fn inner(&self) -> &groth16::PreparedVerifyingKey<Bls12> {
+        &self.0
+    }
+}
 
 #[test]
 fn test_input_circuit_with_bls12_381() {
