@@ -590,8 +590,8 @@ impl SpendVerifyingKey {
     }
 
     /// Get the verifying key as a groth16 type
-    pub fn inner(&self) -> &groth16::VerifyingKey<Bls12> {
-        &self.0
+    pub fn inner(&self) -> groth16::VerifyingKey<Bls12> {
+        self.0.clone()
     }
 }
 
